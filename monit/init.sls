@@ -1,10 +1,19 @@
 {% from "monit/map.jinja" import monit with context %}
 
-monit:
-  pkg.installed:
-    - name: {{ monit.pkg }}
+{{ monit.conf_dir }}:
+  file.directory:
+    - user: root
+    - group: root
+    - dir_mode: 755
+    - file_mode: 644
+    - makedirs: True
+    - recurse:
+        - user
+        - group
+        - mode
+        - ignore_files
 
-monitrc:
+monitrc-file:
   file.managed:
     - name: {{ monit.conf_dir }}/monitrc
     - source: salt://monit/files/monitrc
@@ -15,6 +24,15 @@ monitrc:
       confd_dir: {{ monit.confd_dir }}
     - watch_in:
       - service: monit
+    - require:
+      - file: {{ monit.conf_dir }}
+
+monit-pkg-install:
+  pkg:
+    - name: {{ monit.pkg }}
+    - installed
+    - require:
+      - file: {{ monit.conf_dir }}/monitrc
 
 confd_dir:
   file.directory:
@@ -22,6 +40,8 @@ confd_dir:
     - user: root
     - group: root
     - mode: 0755
+    - require:
+      - file: {{ monit.conf_dir }}
 
 {% if grains['os'] == 'Debian' %}
 upstart:
@@ -48,4 +68,4 @@ service:
       - file: {{ monit.conf_dir }}/monitrc
     - watch:
       - file: {{ monit.conf_dir }}/monitrc
-      - file: {{ monit.confd_dir }}/*
+      - file: {{ monit.confd_dir }}

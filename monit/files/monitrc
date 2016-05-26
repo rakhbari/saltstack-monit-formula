@@ -16,8 +16,10 @@ set alert {{email}}
 {% endfor -%}
 {% endif -%}
 {% if salt['pillar.get']('monit:httpd') %}
-set httpd port {{ salt['pillar.get']('monit:httpd:port') }} and
-  use address {{ salt['pillar.get']('monit:httpd:bind') }}
+set httpd port {{ salt['pillar.get']('monit:httpd:port') }}
+  {% if salt['pillar.get']('monit:httpd:bind') %}
+  and use address {{ salt['pillar.get']('monit:httpd:bind') }}
+  {% endif -%}
   {% for statement in pillar['monit']['httpd']['allow'] -%}
   allow {{ statement }}
   {% endfor -%}

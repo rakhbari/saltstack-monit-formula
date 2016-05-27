@@ -1,3 +1,4 @@
+{% if pillar['monit'] is defined and pillar['monit']['install'] %}
 {% from "monit/map.jinja" import monit with context %}
 
 {{ monit.conf_dir }}:
@@ -69,3 +70,4 @@ service:
     - watch:
       - file: {{ monit.conf_dir }}/monitrc
       - file: {{ monit.confd_dir }}
+{% endif %}

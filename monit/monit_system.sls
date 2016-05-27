@@ -1,3 +1,4 @@
+{% if pillar['monit'] is defined and pillar['monit']['install'] %}
 {% from "monit/map.jinja" import monit with context %}
 
 include:
@@ -8,3 +9,5 @@ monit_system:
     - name: {{ monit.confd_dir }}/system
     - source: salt://monit/files/conf.d/system
     - template: jinja
+
+{% endif %}

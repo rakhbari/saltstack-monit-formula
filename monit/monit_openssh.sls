@@ -1,3 +1,4 @@
+{% if pillar['monit'] is defined and pillar['monit.install'] %}
 {% from "monit/map.jinja" import monit with context %}
 
 include:
@@ -16,3 +17,4 @@ monit_openssh:
       path_sshd: {{ monit.openssh.path.sshd }}
       path_sftpserver: {{ monit.openssh.path.sftpserver }}
       path_sshd_config: {{ monit.openssh.path.sshd_config }}
+{% endif %}

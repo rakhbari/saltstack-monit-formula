@@ -12,7 +12,7 @@ monit:
     - 'email2@example.com'
   httpd: # Optional section
     port: 8080
-    bind: 'localhost'
+    bind: 'localhost' # Optional - Exclude to bind to all NIFs
     allow:
       - 'localhost'
       - '0.0.0.0/0.0.0.0'
